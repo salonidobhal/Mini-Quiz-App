@@ -1,0 +1,33 @@
+:root{
+    padding: 0px;
+}
+#home{
+    background-image: url('../../assets/img/bgimage1.jpg');
+    background-size : cover;
+    background-position: center;
+    height : 100vh;
+    width: 100%;
+    color: white;
+
+    .text{
+        font-family: 'Architects Daughter', cursive;
+        padding: 10% 10% 0% 15%;
+        font-size : 50px;
+        text-align: left;
+    }
+
+    
+    .link{
+        color: #e2d4d4;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-family: 'Fredoka One', cursive;
+        font-size: 1.2em;
+        transition: all .75s ease-in-out;
+    }
+    .link:hover{
+        cursor: pointer;
+    }
+        
+
+}
