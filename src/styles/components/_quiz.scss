@@ -25,7 +25,7 @@
       border-radius: 5px;
       border-left: 4px solid orange;
       color: black;
-      margin: 5rem auto;
+      margin: 0 2rem 4rem 2rem;
       padding: 1rem;
       transition: all 0.3s ease-in-out;
       text-align: center;
@@ -35,13 +35,14 @@
     box-shadow: 1px 2px 4px rgba(231, 135, 8, 0.5);
     cursor: pointer;
 }
-.button-container{
+/*.button-container{
     display:flex;
     justify-content: flex-start;
     margin: 0 auto 1rem auto;
     padding: 3rem;
     width: 90vw;
 
+}*/
+
 }
-  
-}
+
