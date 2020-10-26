@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Loading } from './LoadingComponent';
 import M from 'materialize-css';
 import Score from './ScorePage';
-import { Link } from 'react-router-dom';
 
 export default class Quiz extends Component {
     constructor(props) {
