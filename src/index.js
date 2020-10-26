@@ -6,6 +6,8 @@ import './styles/styles.scss';
 import reportWebVitals from './reportWebVitals';
 import 'font-awesome/css/font-awesome.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'materialize-css/dist/css/materialize.min.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 ReactDOM.render(
   <React.StrictMode>
