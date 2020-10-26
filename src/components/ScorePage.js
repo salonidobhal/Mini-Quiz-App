@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
-const ScorePage =(score) => 
-        (<div> Your score is {score}/10 </div>)
+const ScorePage =(props) => {
+        return (<div className="score"> Your score is {props.score}/10 </div>)
+}
 export default ScorePage;   
 

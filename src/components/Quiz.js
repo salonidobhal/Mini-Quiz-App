@@ -21,7 +21,10 @@ export default class Quiz extends Component {
             userScore: 0,
             correctAnswers: 0,
             wrongAnswers: 0,
-            time: {}
+            time: {},
+            prevButton : false,
+            nextButton :true, 
+            quizEnd: null
         };
     }
 
@@ -71,10 +74,8 @@ export default class Quiz extends Component {
         }
         
     }
-    handleQuit= () => {
-        return(
-            <Score score = {this.state.userScore}/>
-        );
+    handleQuit= (e) => {
+ alert("Thankyou for playing");
     }
     
     handleAnswer= (e) =>{
@@ -107,11 +108,14 @@ export default class Quiz extends Component {
             classes: 'toast-valid',
             displayLength:1500
         });
-        this.setState({
-            userScore : this.state.userScore + 1,
-            correctAnswers : this.state.correctAnswers + 1
+        if(this.state.userScore!== 10){
+            this.setState({
+                userScore : this.state.userScore + 1,
+                correctAnswers : this.state.correctAnswers + 1
+            }
+            );
         }
-        )
+       
     }
     wrongAnswer = () => {
         navigator.vibrate(1000);
@@ -161,13 +165,15 @@ export default class Quiz extends Component {
                             </div>
                         </div>
                     </div>
+                    <Score score={this.state.userScore}/>
 
                     <div className="button-container">
                         <ButtonWrapper onClick={this.handlePrevious}>Previous</ButtonWrapper>
                         <ButtonWrapper onClick={this.handleNext}>Next</ButtonWrapper>
-                        <ButtonWrapper quit>
-                            <Link to ='/score'/>Quit</ButtonWrapper>
+                        <ButtonWrapper quit onClick={this.handleQuit}>Quit</ButtonWrapper>
+                            
                     </div>
+                    
                 </>
             );
         }
