@@ -23,11 +23,9 @@ export default class Quiz extends Component {
             userScore: 0,
             correctAnswers: 0,
             wrongAnswers: 0,
-            time: {},
-            prevButton: false,
-            nextButton: true,
-            quizEnd: null
+            time: {}
         };
+        this.interval = null; 
     }
 
     componentDidMount() {
@@ -41,8 +39,11 @@ export default class Quiz extends Component {
                     currentQuestion: data.results[this.state.currentQuestionIndex]
 
                 })
+                
                 console.log(this.state.questions);
-            });
+            }
+            )
+            .then(this.startTimer());
 
     }
 
@@ -145,6 +146,35 @@ export default class Quiz extends Component {
 
         });
     }
+    startTimer = () =>{
+        const countDownTime = Date.now() + 300000;
+        this.interval = setInterval( () => {
+            const now = new Date();
+            const distance = countDownTime - now;
+            const minutes = Math.floor((distance  % (1000*60*60))/(1000*60));
+            const seconds = Math.floor((distance  % (1000*60))/(1000));
+
+            if (distance < 0){
+                clearInterval(this.interval);
+                this.setState({
+                    time : {
+                        minutes: 0,
+                        seconds: 0
+                    }
+                }, () => {
+                    alert("Quiz has ended!"); 
+                });
+            }
+            else {
+                this.setState({
+                    time : {
+                        minutes,
+                        seconds
+                    }
+                });
+            }
+        }, 1000);
+    }
 
 
     render() {
@@ -159,7 +189,7 @@ export default class Quiz extends Component {
 
             return (
                 <>
-                    <Helmet>Mini Quiz-Page</Helmet>
+                    <Helmet>Mini Quiz - Page</Helmet>
                     <React.Fragment>
                         <audio id="correct-sound" constrols src = {correctNotification}/>
                         <audio id="wrong-sound" constrols src = {wrongNotification}/>
@@ -172,7 +202,7 @@ export default class Quiz extends Component {
                         <h2 align="center">Quiz Mode</h2>
                         <p>
                             <span className="left ml-3">{this.state.currentQuestionIndex + 1} of 10</span>
-                            <span className="right mr-3"><i className="fa fa-clock-o fa-lg" aria-hidden="true"></i>unlimited</span>
+                            <span className="right mr-3"><i className="fa fa-clock-o fa-lg" aria-hidden="true"></i>{this.state.time.minutes}:{this.state.time.seconds}</span>
                         </p>
                         <div className="question" dangerouslySetInnerHTML={{ __html: currQuestion.question }}>
                         </div>
@@ -221,13 +251,12 @@ border-color:${props => props.quit ? "#f74343" : "#38ebeb"};
 }
 text-align: center;
 border-radius: 2px;
+margin-bottom : 4px;
 padding: 10px;
-margin-left: auto;
-margin-right : auto;
 font-size: 20px;
+width : 100%;
 font-weight: 700;
-align-self:left ;
-width: 15vw;
+align-self:center ;
 transition: all .75s ease-in-out;
 `;
 
