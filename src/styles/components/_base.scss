@@ -9,3 +9,11 @@
     border-radius: 5px !important;
 
 }
+
+.disable{
+    pointer-events : none !important;
+    background-color : #ccc !important;
+    box-shadow: none !important;
+    opacity : 0.9;
+    border : none;
+}
