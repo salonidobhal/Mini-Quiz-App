@@ -7,6 +7,7 @@ import Score from './ScorePage';
 import correctNotification from '../assets/audio/correct-answer.mp3';
 import wrongNotification from '../assets/audio/wrong-answer.mp3';
 import buttonSound from '../assets/audio/button-sound.mp3';
+import classnames from 'classnames';
 
 export default class Quiz extends PureComponent {
     constructor(props) {
@@ -14,7 +15,7 @@ export default class Quiz extends PureComponent {
         this.state = {
             questions: [],
             currentQuestion: {},
-            answer: null,
+            answer: [],
             numberOfQuestions: 0,
             numberOfAnsweredQuestions: 0,
             currentQuestionIndex: 0,
@@ -160,7 +161,7 @@ export default class Quiz extends PureComponent {
     }
 
     startTimer = () => {
-        const countDownTime = Date.now() + 100000;
+        const countDownTime = Date.now() + 10000;
         this.interval = setInterval(() => {
             const now = new Date();
             const distance = countDownTime - now;
@@ -175,7 +176,8 @@ export default class Quiz extends PureComponent {
                         seconds: 0
                     },
                     nextButtonDisabled: true,
-                    previousButtonDisabled: true
+                    previousButtonDisabled: true,
+                    quit : true
                 }, () => {
 
                     alert("Quiz has ended!");
@@ -203,7 +205,7 @@ export default class Quiz extends PureComponent {
 
     }
 
-    /*shuffleQuestions = () => {
+    shuffleQuestions = () => {
         console.log("inside shufflequestions");
         if (this.state.questions.length > 0) {
             let currQuestion = this.state.questions[this.state.currentQuestionIndex];
@@ -219,13 +221,12 @@ export default class Quiz extends PureComponent {
                 console.log("state set");
                 console.log(this.state.answer);
         }
-    }*/
+    }
 
 
     render() {
         if (this.state.questions.length > 0) {
             let currQuestion = this.state.questions[this.state.currentQuestionIndex];
-           console.log(currQuestion);
 
             const answers = [currQuestion.correct_answer,
             ...currQuestion.incorrect_answers].sort(() =>
@@ -251,12 +252,12 @@ export default class Quiz extends PureComponent {
                         </div>
                         <div className="row">
                             <div className="col-12 col-md-6 mx-auto">
-                                <div onClick={this.handleAnswer} className='{{this.state.quit ? "disable" : ""}} options'>{answers[0]}</div>
-                                <div onClick={this.handleAnswer} className='{{"disable" : this.state.quit}} options'>{answers[1]}</div>
+                                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})}>{answers[0]}</div>
+                                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})}>{answers[1]}</div>
                             </div>
                             <div className="col-12 col-md-6 mx-auto">
-                                <div onClick={this.handleAnswer} className='{{"disable" : this.state.quit}} options'>{answers[2]}</div>
-                                <div onClick={this.handleAnswer} className='{{"disable" : this.state.quit}} options'>{answers[3]}</div>
+                                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})}>{answers[2]}</div>
+                                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})}>{answers[3]}</div>
                             </div>
                         </div>
                     </div>
