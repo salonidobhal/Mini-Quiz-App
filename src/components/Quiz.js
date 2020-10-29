@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Component } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Loading } from './LoadingComponent';
@@ -16,7 +16,7 @@ export default class Quiz extends PureComponent {
             questions: [],
             currentQuestion: {},
             answer: [],
-            numberOfQuestions: 0,
+            numberOfQuestions: 10,
             numberOfAnsweredQuestions: 0,
             currentQuestionIndex: 0,
             userScore: 0,
@@ -28,6 +28,7 @@ export default class Quiz extends PureComponent {
             quit: false
         };
         this.interval = null;
+        this.time = React.createRef();
     }
 
     componentDidMount() {
@@ -36,13 +37,16 @@ export default class Quiz extends PureComponent {
         fetch(url)
             .then((res) => res.json())
             .then(data => {
+                const questions = data.results.map((question) => ({
+                    ...question, answers : [question.correct_answer, ...question.incorrect_answers].sort(() => Math.random()-0.5)
+                }))
                 this.setState({
-                    questions: data.results,
+                    questions: questions,
                     currentQuestion: data.results[this.state.currentQuestionIndex]
-
                 })
 
                 console.log(this.state.questions);
+                console.log(this.state.questions.map(answer => (answer.answers)));
             })
             .then(this.startTimer());
 
@@ -112,8 +116,7 @@ export default class Quiz extends PureComponent {
             this.wrongAnswer();
         }
 
-        console.log(this.state.userScore);
-        if (this.state.currentQuestionIndex === 8) {
+        if (this.state.currentQuestionIndex >= 8) {
             this.setState({
                 nextButtonDisabled: true,
                 currentQuestionIndex: 9
@@ -161,7 +164,7 @@ export default class Quiz extends PureComponent {
     }
 
     startTimer = () => {
-        const countDownTime = Date.now() + 10000;
+        const countDownTime = Date.now() + 100000;
         this.interval = setInterval(() => {
             const now = new Date();
             const distance = countDownTime - now;
@@ -194,44 +197,21 @@ export default class Quiz extends PureComponent {
         }, 1000);
     }
 
-    stopTimer = () => {
-        clearInterval(this.interval);
-        this.setState({
-            time : {
-                minutes: 0,
-                seconds: 0
-            }
-        })
-
-    }
-
-    shuffleQuestions = () => {
-        console.log("inside shufflequestions");
-        if (this.state.questions.length > 0) {
-            let currQuestion = this.state.questions[this.state.currentQuestionIndex];
-            console.log(currQuestion);
-
-            const answers = [currQuestion.correct_answer,
-            ...currQuestion.incorrect_answers].sort(() =>
-                Math.random() - 0.5);
-                console.log("shuffled questions");
-                this.setState({
-                    answer : answers
-                });
-                console.log("state set");
-                console.log(this.state.answer);
-        }
-    }
-
-
     render() {
-        if (this.state.questions.length > 0) {
+        if (this.state.questions.length > 0 && this.state.currentQuestionIndex < this.state.numberOfQuestions) {
             let currQuestion = this.state.questions[this.state.currentQuestionIndex];
 
-            const answers = [currQuestion.correct_answer,
-            ...currQuestion.incorrect_answers].sort(() =>
-                Math.random() - 0.5);
-
+            var answers =
+            this.state.questions.map(answer => <div className="row">
+            <div className="col-12 col-md-6 mx-auto">
+                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})} dangerouslySetInnerHTML={{ __html: answer.answers[0] }}></div>
+                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})} dangerouslySetInnerHTML={{ __html: answer.answers[1] }}></div>
+            </div>
+            <div className="col-12 col-md-6 mx-auto">
+                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})} dangerouslySetInnerHTML={{ __html: answer.answers[2] }}></div>
+                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})} dangerouslySetInnerHTML={{ __html: answer.answers[3] }}></div>
+            </div>
+        </div>);
 
             return (
                 <>
@@ -250,16 +230,7 @@ export default class Quiz extends PureComponent {
                         </p>
                         <div className="question" dangerouslySetInnerHTML={{ __html: currQuestion.question }}>
                         </div>
-                        <div className="row">
-                            <div className="col-12 col-md-6 mx-auto">
-                                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})}>{answers[0]}</div>
-                                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})}>{answers[1]}</div>
-                            </div>
-                            <div className="col-12 col-md-6 mx-auto">
-                                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})}>{answers[2]}</div>
-                                <div onClick={this.handleAnswer} className={classnames('options',{'disable': this.state.quit})}>{answers[3]}</div>
-                            </div>
-                        </div>
+                        {answers[this.state.currentQuestionIndex]}
                     </div>
                     <Score score={this.state.userScore} />
                     <div className="row justify-content-center">
@@ -272,9 +243,6 @@ export default class Quiz extends PureComponent {
                             <ButtonWrapper quit onClick={this.handleQuit}>Quit</ButtonWrapper>
                         </div>
                     </div>
-
-
-
                 </>
             );
         }
