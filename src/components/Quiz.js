@@ -164,7 +164,7 @@ export default class Quiz extends PureComponent {
     }
 
     startTimer = () => {
-        const countDownTime = Date.now() + 100000;
+        const countDownTime = Date.now() + 60000;
         this.interval = setInterval(() => {
             const now = new Date();
             const distance = countDownTime - now;
@@ -197,8 +197,21 @@ export default class Quiz extends PureComponent {
         }, 1000);
     }
 
+    stopTimer = () => {
+                clearInterval(this.interval);
+                this.setState({
+                    time: {
+                        minutes: 0,
+                        seconds: 0
+                    },
+                    nextButtonDisabled: true,
+                    previousButtonDisabled: true,
+                    quit : true
+                });
+    }
+
     render() {
-        if (this.state.questions.length > 0 && this.state.currentQuestionIndex < this.state.numberOfQuestions) {
+        if (this.state.questions.length > 0 ) {
             let currQuestion = this.state.questions[this.state.currentQuestionIndex];
 
             var answers =
